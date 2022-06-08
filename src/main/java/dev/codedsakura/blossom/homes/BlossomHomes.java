@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.codedsakura.blossom.lib.BlossomLib;
 import dev.codedsakura.blossom.lib.ConfigManager;
 import dev.codedsakura.blossom.lib.CustomLogger;
@@ -14,6 +15,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.apache.logging.log4j.core.Logger;
 
@@ -35,9 +37,9 @@ public class BlossomHomes implements ModInitializer {
 
          LiteralArgumentBuilder<ServerCommandSource> addHome = literal("sethome")
                 .requires(Permissions.require("blossom.home.set", true))
-                .executes(this::addHomeDefaults)
+                .executes(this::addHomeDefault)
                 .then(argument("name", StringArgumentType.string())
-                        .executes(this::addHomePlayer)
+                        .executes(this::addHomeNamed)
                         .then(argument("position", Vec3ArgumentType.vec3(true))
                                 .requires(Permissions.require("blossom.home.set.pos", false))
                                 .then(argument("rotation", RotationArgumentType.rotation())
@@ -84,72 +86,85 @@ public class BlossomHomes implements ModInitializer {
     }
 
 
-    private int listHomes(CommandContext<ServerCommandSource> ctx) {
+    private ServerPlayerEntity getPlayer(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        try {
+            return EntityArgumentType.getPlayer(ctx, "player");
+        } catch (IllegalArgumentException e) {
+            return ctx.getSource().getPlayer();
+        }
+    }
+
+
+    private int listHomes(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        ServerPlayerEntity player = getPlayer(ctx);
+        LOGGER.debug("list {}", player);
         // todo
         return Command.SINGLE_SUCCESS;
     }
 
 
-    private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) {
+    private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) throws CommandSyntaxException {
+        ServerPlayerEntity player = getPlayer(ctx);
+        LOGGER.debug("run {}", player);
         // todo
         return Command.SINGLE_SUCCESS;
     }
 
-    private int runHomeDefault(CommandContext<ServerCommandSource> ctx) {
+    private int runHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         return runHome(ctx, null);
     }
 
-    private int runHomeNamed(CommandContext<ServerCommandSource> ctx) {
+    private int runHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         String homeName = StringArgumentType.getString(ctx, "home");
         return runHome(ctx, homeName);
     }
 
 
-    private int addHome(CommandContext<ServerCommandSource> ctx, Home home) {
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private int addHomeCoordinates(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) {
-        // fixme
-        return addHome(ctx, null);
-    }
-
-    private int addHomeDefaults(CommandContext<ServerCommandSource> ctx) {
-        // fixme
-        return addHomeCoordinates(ctx, null);
-    }
-
-    private int addHomePosRot(CommandContext<ServerCommandSource> ctx) {
-        // fixme
-        return addHomeCoordinates(ctx, null);
-    }
-
-    private int addHomeDimension(CommandContext<ServerCommandSource> ctx) {
-        // fixme
-        return addHomeCoordinates(ctx, null);
-    }
-
-    private int addHomePlayer(CommandContext<ServerCommandSource> ctx) {
-        // fixme
-        return addHome(ctx, null);
-    }
-
-    private int addHomeOtherPlayer(CommandContext<ServerCommandSource> ctx) {
-        // fixme
-        return addHome(ctx, null);
-    }
-
-
-    private int removeHome(CommandContext<ServerCommandSource> ctx, String name) {
+    private int addHome(CommandContext<ServerCommandSource> ctx, Home home) throws CommandSyntaxException {
+        ServerPlayerEntity player = getPlayer(ctx);
+        LOGGER.debug("add {}", player);
         // todo
         return Command.SINGLE_SUCCESS;
     }
 
-    private int removeHomeDefault(CommandContext<ServerCommandSource> ctx) {
+    private int addHomeCoordinates(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException {
+        // fixme
+        return addHome(ctx, null);
+    }
+
+    private int addHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        // fixme
+        return addHomeCoordinates(ctx, null);
+    }
+
+    private int addHomePosRot(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        // fixme
+        return addHomeCoordinates(ctx, null);
+    }
+
+    private int addHomeDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        // fixme
+        return addHomeCoordinates(ctx, null);
+    }
+
+    private int addHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        // fixme
+        return addHome(ctx, null);
+    }
+
+
+    private int removeHome(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
+        ServerPlayerEntity player = getPlayer(ctx);
+        LOGGER.debug("del {}", player);
+        // todo
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int removeHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         return removeHome(ctx, null);
     }
 
-    private int removeHomeNamed(CommandContext<ServerCommandSource> ctx) {
+    private int removeHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         String homeName = StringArgumentType.getString(ctx, "home");
         return removeHome(ctx, homeName);
     }
