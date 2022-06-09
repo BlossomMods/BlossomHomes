@@ -8,5 +8,6 @@ public class BlossomHomesConfig {
     int standStill = 3;
     int cooldown = 30;
 
+    String defaultHome = "main";
     int startHomes = 2;
 }
