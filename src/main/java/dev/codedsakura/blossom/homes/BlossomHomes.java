@@ -24,9 +24,11 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class BlossomHomes implements ModInitializer {
     static BlossomHomesConfig CONFIG = ConfigManager.register(BlossomHomesConfig.class, "BlossomHomes.json", newConfig -> CONFIG = newConfig);
     public static final Logger LOGGER = CustomLogger.createLogger("BlossomHomes");
+    static HomeController homeController;
 
     @Override
     public void onInitialize() {
+        homeController = new HomeController();
         LOGGER.debug(
                 LoggerContext.getContext(false).getConfiguration().getAppenders()
         );
@@ -35,6 +37,7 @@ public class BlossomHomes implements ModInitializer {
                 .requires(Permissions.require("blossom.home", true))
                 .executes(this::runHomeDefault)
                 .then(argument("name", StringArgumentType.string())
+                        .suggests(homeController)
                         .executes(this::runHomeNamed)));
 
 
@@ -59,6 +62,7 @@ public class BlossomHomes implements ModInitializer {
                 .requires(Permissions.require("blossom.home.remove", true))
                 .executes(this::removeHomeDefault)
                 .then(argument("name", StringArgumentType.string())
+                        .suggests(homeController)
                         .executes(this::removeHomeNamed)));
 
 
@@ -87,11 +91,13 @@ public class BlossomHomes implements ModInitializer {
                         .requires(Permissions.require("blossom.homes.remove", true))
                         .executes(this::removeHomeDefault)
                         .then(argument("name", StringArgumentType.string())
+                                .suggests(homeController)
                                 .executes(this::removeHomeNamed)))
                 .then(literal("delete")
                         .requires(Permissions.require("blossom.homes.remove", true))
                         .executes(this::removeHomeDefault)
                         .then(argument("name", StringArgumentType.string())
+                                .suggests(homeController)
                                 .executes(this::removeHomeNamed))));
     }
 
