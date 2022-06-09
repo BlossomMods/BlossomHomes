@@ -9,6 +9,7 @@ import dev.codedsakura.blossom.lib.ListDataController;
 import dev.codedsakura.blossom.lib.TeleportUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -67,6 +68,12 @@ class PlayerWithHomes {
     public UUID uuid;
     public ArrayList<Home> homes;
     public int maxHomes;
+
+    public PlayerWithHomes(UUID uuid) {
+        this.uuid = uuid;
+        homes = new ArrayList<>();
+        maxHomes = BlossomHomes.CONFIG.startHomes;
+    }
 }
 
 public class HomeController extends ListDataController<PlayerWithHomes> implements SuggestionProvider<ServerCommandSource> {
@@ -96,5 +103,81 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
                 .filter(pair -> pair.toLowerCase().startsWith(start))
                 .forEach(builder::suggest);
         return builder.buildFuture();
+    }
+
+    List<Home> findPlayerHomes(ServerPlayerEntity player) {
+        UUID uuid = player.getUuid();
+
+        for (PlayerWithHomes playerWithHomes : data) {
+            if (playerWithHomes.uuid.equals(uuid)) {
+                return playerWithHomes.homes;
+            }
+        }
+
+        return List.of();
+    }
+
+    Home findHome(ServerPlayerEntity player, String name) {
+        for (Home home : findPlayerHomes(player)) {
+            if (home.name.equals(name)) {
+                return home;
+            }
+        }
+
+        return null;
+    }
+
+    int getMaxHomes(ServerPlayerEntity player) {
+        UUID uuid = player.getUuid();
+
+        for (PlayerWithHomes playerWithHomes : data) {
+            if (playerWithHomes.uuid.equals(uuid)) {
+                return playerWithHomes.maxHomes;
+            }
+        }
+
+        return BlossomHomes.CONFIG.startHomes;
+    }
+
+    enum AddHomeResult {
+        SUCCESS,
+        NOT_ENOUGH_HOMES,
+        NAME_TAKEN,
+    }
+
+    AddHomeResult addHome(ServerPlayerEntity player, Home home) {
+        UUID uuid = player.getUuid();
+        List<Home> homes = findPlayerHomes(player);
+
+        if (homes.size() + 1 > getMaxHomes(player)) {
+            return AddHomeResult.NOT_ENOUGH_HOMES;
+        }
+        if (homes.stream().map(v -> v.name).anyMatch(v -> v.equals(home.name))) {
+            return AddHomeResult.NAME_TAKEN;
+        }
+
+        if (data.stream().noneMatch(v -> v.uuid.equals(uuid))) {
+            data.add(new PlayerWithHomes(uuid));
+        }
+
+        for (PlayerWithHomes playerWithHomes : data) {
+            if (playerWithHomes.uuid.equals(uuid)) {
+                playerWithHomes.homes.add(home);
+                return AddHomeResult.SUCCESS;
+            }
+        }
+
+        write();
+        return AddHomeResult.SUCCESS;
+    }
+
+    boolean removeHome(ServerPlayerEntity player, String name) {
+        UUID uuid = player.getUuid();
+        return data
+                .stream()
+                .filter(v -> v.uuid.equals(uuid))
+                .findAny()
+                .map(v -> v.homes.removeIf(home -> home.name.equals(name)))
+                .orElse(false);
     }
 }
