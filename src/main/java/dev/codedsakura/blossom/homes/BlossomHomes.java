@@ -5,10 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.codedsakura.blossom.lib.BlossomLib;
-import dev.codedsakura.blossom.lib.ConfigManager;
-import dev.codedsakura.blossom.lib.CustomLogger;
-import dev.codedsakura.blossom.lib.Permissions;
+import dev.codedsakura.blossom.lib.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
@@ -16,6 +13,8 @@ import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
@@ -113,7 +112,7 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int runHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        return runHome(ctx, null);
+        return runHome(ctx, CONFIG.defaultHome);
     }
 
     private int runHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
@@ -129,29 +128,43 @@ public class BlossomHomes implements ModInitializer {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int addHomeCoordinates(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException {
-        // fixme
-        return addHome(ctx, null);
+    private int addHomeDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException {
+        String homeName = StringArgumentType.getString(ctx, "name");
+        Vec3d position = Vec3ArgumentType.getPosArgument(ctx, "position").toAbsolutePos(ctx.getSource());
+        Vec2f rotation = RotationArgumentType.getRotation(ctx, "rotation").toAbsoluteRotation(ctx.getSource());
+        return addHome(ctx, new Home(
+                homeName,
+                new TeleportUtils.TeleportDestination(
+                        dimension,
+                        position,
+                        rotation
+                )
+        ));
+    }
+
+    private int addHomeNamed(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
+        return addHome(ctx, new Home(
+                name,
+                new TeleportUtils.TeleportDestination(ctx.getSource().getPlayer())
+        ));
     }
 
     private int addHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        // fixme
-        return addHomeCoordinates(ctx, null);
-    }
-
-    private int addHomePosRot(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        // fixme
-        return addHomeCoordinates(ctx, null);
-    }
-
-    private int addHomeDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        // fixme
-        return addHomeCoordinates(ctx, null);
+        return addHomeNamed(ctx, CONFIG.defaultHome);
     }
 
     private int addHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        // fixme
-        return addHome(ctx, null);
+        String homeName = StringArgumentType.getString(ctx, "name");
+        return addHomeNamed(ctx, homeName);
+    }
+
+    private int addHomePosRot(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        return addHomeDimension(ctx, ctx.getSource().getWorld());
+    }
+
+    private int addHomeDimension(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        ServerWorld dimension = DimensionArgumentType.getDimensionArgument(ctx, "dimension");
+        return addHomeDimension(ctx, dimension);
     }
 
 
@@ -163,7 +176,7 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int removeHomeDefault(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        return removeHome(ctx, null);
+        return removeHome(ctx, CONFIG.defaultHome);
     }
 
     private int removeHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
