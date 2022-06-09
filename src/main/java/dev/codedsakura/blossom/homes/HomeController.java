@@ -2,7 +2,6 @@ package dev.codedsakura.blossom.homes;
 
 import dev.codedsakura.blossom.lib.ListDataController;
 import dev.codedsakura.blossom.lib.TeleportUtils;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -15,22 +14,20 @@ import java.util.UUID;
 class Home {
     public String name;
     public String world;
-    public UUID owner;
     public double x, y, z;
     public float yaw, pitch;
 
-    Home(String name, PlayerEntity owner, TeleportUtils.TeleportDestination destination) {
+    Home(String name, TeleportUtils.TeleportDestination destination) {
         this(
-                name, destination.world.getRegistryKey().getValue().toString(), owner.getUuid(),
+                name, destination.world.getRegistryKey().getValue().toString(),
                 destination.x, destination.y, destination.z,
                 destination.yaw, destination.pitch
         );
     }
 
-    Home(String name, String world, UUID owner, double x, double y, double z, float yaw, float pitch) {
+    Home(String name, String world, double x, double y, double z, float yaw, float pitch) {
         this.name = name;
         this.world = world;
-        this.owner = owner;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -43,7 +40,6 @@ class Home {
         return "Home{" +
                 "name='" + name + '\'' +
                 ", world='" + world + '\'' +
-                ", owner=" + owner +
                 ", x=" + x +
                 ", y=" + y +
                 ", z=" + z +
