@@ -1,1 +1,15 @@
-{}
+{
+  "blossom.homes.list.empty": "You have 0/%s homes.",
+  "blossom.homes.list.header": "You have %s/%s homes:\n",
+  "blossom.homes.list.item": "%s",
+  "blossom.homes.list.item.description": "x: %3$s; y: %4$s; z: %5$s\nyaw: %6$s; pitch: %7$s",
+  "blossom.homes.list.item.before": "- ",
+  "blossom.homes.list.item.after": "",
+  "blossom.homes.add": "Home %s has been successfully added!",
+  "blossom.homes.add.failed.max": "You cannot have more than %s homes!",
+  "blossom.homes.add.failed.name": "You already have a home named %s!",
+  "blossom.homes.remove": "Home %s has been successfully removed!",
+  "blossom.homes.remove.failed": "Failed to remove %s!",
+  "blossom.homes.setMax": "Set max homes to %s for %s",
+  "blossom.homes.setMax.delimiter": ","
+}
