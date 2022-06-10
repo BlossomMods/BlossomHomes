@@ -1,6 +1,7 @@
 package dev.codedsakura.blossom.homes;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -8,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.codedsakura.blossom.lib.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.argument.DimensionArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -101,7 +103,13 @@ public class BlossomHomes implements ModInitializer {
                         .executes(this::removeHomeDefault)
                         .then(argument("name", StringArgumentType.string())
                                 .suggests(homeController)
-                                .executes(this::removeHomeNamed))));
+                                .executes(this::removeHomeNamed)))
+
+                .then(literal("set-max")
+                        .requires(Permissions.require("blossom.homes.set-max", 2))
+                        .then(argument("new-max", IntegerArgumentType.integer(0))
+                                .then(argument("players", EntityArgumentType.players())
+                                        .executes(this::setMax)))));
     }
 
 
@@ -245,5 +253,30 @@ public class BlossomHomes implements ModInitializer {
     private int removeHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         String homeName = StringArgumentType.getString(ctx, "home");
         return removeHome(ctx, homeName);
+    }
+
+
+    private int setMax(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        int newMax = IntegerArgumentType.getInteger(ctx, "new-max");
+        Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(ctx, "players");
+
+        players.forEach(p -> homeController.setMaxHomes(p, newMax));
+
+        TextUtils.sendOps(
+                ctx,
+                "blossom.homes.setMax",
+                newMax,
+                players
+                        .stream()
+                        .map(ServerPlayerEntity::getPlayerListName)
+                        .filter(Objects::nonNull)
+                        .map(Text::shallowCopy)
+                        .collect(JoiningCollector.<MutableText>collector(
+                                MutableText::append,
+                                () -> TextUtils.translation("blossom.homes.setMax.delimiter")
+                        ))
+        );
+
+        return Command.SINGLE_SUCCESS;
     }
 }

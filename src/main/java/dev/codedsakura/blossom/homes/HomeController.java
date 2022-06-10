@@ -157,6 +157,21 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return BlossomHomes.CONFIG.startHomes;
     }
 
+    void setMaxHomes(ServerPlayerEntity player, int newMaxHomes) {
+        UUID uuid = player.getUuid();
+
+        for (PlayerWithHomes playerWithHomes : data) {
+            if (playerWithHomes.uuid.equals(uuid)) {
+                playerWithHomes.maxHomes = newMaxHomes;
+                write();
+                return;
+            }
+        }
+
+        data.add(new PlayerWithHomes(uuid, newMaxHomes));
+        write();
+    }
+
     enum AddHomeResult {
         SUCCESS,
         NOT_ENOUGH_HOMES,
