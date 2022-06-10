@@ -1,3 +1,7 @@
+# 1.1.0
+
+* Add dimension whitelist / blacklist
+
 # 1.0.0
 
 * Initialize project

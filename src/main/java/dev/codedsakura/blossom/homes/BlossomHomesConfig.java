@@ -2,6 +2,8 @@ package dev.codedsakura.blossom.homes;
 
 import dev.codedsakura.blossom.lib.TeleportConfig;
 
+import java.util.List;
+
 public class BlossomHomesConfig {
     TeleportConfig teleportation = null;
 
@@ -10,4 +12,7 @@ public class BlossomHomesConfig {
 
     String defaultHome = "main";
     int startHomes = 2;
+
+    List<String> dimensionBlacklist = List.of();
+    boolean useBlacklistAsWhitelist = false;
 }

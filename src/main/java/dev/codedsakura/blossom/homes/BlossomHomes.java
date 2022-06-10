@@ -180,6 +180,18 @@ public class BlossomHomes implements ModInitializer {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
         LOGGER.info("adding home {} to {}", home, player);
 
+        boolean invalidDimension = CONFIG.dimensionBlacklist.contains(home.world);
+        if (CONFIG.useBlacklistAsWhitelist) {
+            invalidDimension = !invalidDimension;
+        }
+
+        if (invalidDimension) {
+            if (!Permissions.check(ctx.getSource(), "blossom.homes.set.in-blacklist", 2)) {
+                TextUtils.sendErr(ctx, "blossom.homes.add.failed.dimension", home.world);
+                return Command.SINGLE_SUCCESS;
+            }
+        }
+
         HomeController.AddHomeResult result = homeController.addHome(player, home);
         switch (result) {
             case SUCCESS -> TextUtils.sendSuccess(ctx, "blossom.homes.add", home.name);

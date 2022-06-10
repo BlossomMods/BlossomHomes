@@ -27,7 +27,9 @@ teleportation settings
 `cooldown`: int - (seconds), how long the player has to wait after teleporting using this command, before
 being able to teleport again  
 `defaultHome`: String - name of the default home  
-`startHomes`: int - default max homes
+`startHomes`: int - default max homes  
+`dimensionBlacklist`: String[] - a list of dimension ids (like `minecraft:the_end`) in which a player can't set a home
+`useBlacklistAsWhitelist`: boolean - invert blacklist to function as a whitelist
 
 ## Commands & their permissions
 
@@ -62,6 +64,9 @@ to allow the server owners to hide some commands in case of command clutter.
     Permission: `blossom.homes.remove` (default: false)
   - `set-max <new-max> <players>` - set all `<players>`'s max homes to `<new-max>`   
     Permission: `blossom.homes.set-max` (default: OP level 2)
+
+Permission: `blossom.homes.set.in-blacklist` (default: OP level 2) - allow setting homes in blacklisted dimensions.
+To set other players' homes, `/execute as <player> run sethome <name>` can be used.
 
 ## Translation keys
 
