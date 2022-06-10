@@ -13,10 +13,16 @@ import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -29,9 +35,6 @@ public class BlossomHomes implements ModInitializer {
     @Override
     public void onInitialize() {
         homeController = new HomeController();
-        LOGGER.debug(
-                LoggerContext.getContext(false).getConfiguration().getAppenders()
-        );
 
         BlossomLib.addCommand(literal("home")
                 .requires(Permissions.require("blossom.home", true))
@@ -104,8 +107,33 @@ public class BlossomHomes implements ModInitializer {
 
     private int listHomes(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
-        LOGGER.debug("list {}", player);
-        // todo
+        LOGGER.trace("home list {}", player);
+
+        List<Home> homes = homeController.findPlayerHomes(player);
+
+        if (homes.size() == 0) {
+            TextUtils.send(ctx, "blossom.homes.list.empty", homeController.getMaxHomes(player));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        MutableText result = homes
+                .parallelStream()
+                .map(home -> TextUtils.translation("blossom.homes.list.item.before")
+                        .append(TextUtils.translation(
+                                "blossom.homes.list.item",
+                                new CommandTextBuilder(home.name)
+                                        .setClickSuggest()
+                                        .setCommandRun("/home " + home.name)
+                                        .setHoverShowRun()
+                                        .setDescription(TextUtils.translation("blossom.homes.list.item.description", home.toArgs()))))
+                        .append(TextUtils.translation("blossom.homes.list.item.after")))
+                .collect(JoiningCollector.collector(MutableText::append, new LiteralText("\n")));
+
+        ctx.getSource().sendFeedback(
+                TextUtils.translation("blossom.homes.list.header", homes.size(), homeController.getMaxHomes(player))
+                        .append(result),
+                false
+        );
         return Command.SINGLE_SUCCESS;
     }
 

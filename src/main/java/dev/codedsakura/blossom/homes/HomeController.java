@@ -62,6 +62,18 @@ class Home {
                 x, y, z, yaw, pitch
         );
     }
+
+    public Object[] toArgs() {
+        return new Object[]{
+                name,
+                world,
+                String.format("%.2f", x),
+                String.format("%.2f", y),
+                String.format("%.2f", z),
+                String.format("%.2f", yaw),
+                String.format("%.2f", pitch)
+        };
+    }
 }
 
 class PlayerWithHomes {
@@ -73,6 +85,12 @@ class PlayerWithHomes {
         this.uuid = uuid;
         homes = new ArrayList<>();
         maxHomes = BlossomHomes.CONFIG.startHomes;
+    }
+
+    public PlayerWithHomes(UUID uuid, int maxHomes) {
+        this.uuid = uuid;
+        this.maxHomes = maxHomes;
+        homes = new ArrayList<>();
     }
 }
 
