@@ -170,8 +170,16 @@ public class BlossomHomes implements ModInitializer {
 
     private int addHome(CommandContext<ServerCommandSource> ctx, Home home) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
-        LOGGER.debug("add {}", player);
-        // todo
+        LOGGER.info("adding home {} to {}", home, player);
+
+        HomeController.AddHomeResult result = homeController.addHome(player, home);
+        switch (result) {
+            case SUCCESS -> TextUtils.sendSuccess(ctx, "blossom.homes.add", home.name);
+            case NOT_ENOUGH_HOMES ->
+                    TextUtils.sendErr(ctx, "blossom.homes.add.failed.max", homeController.getMaxHomes(player));
+            case NAME_TAKEN -> TextUtils.sendErr(ctx, "blossom.homes.add.failed.name", home.name);
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 
