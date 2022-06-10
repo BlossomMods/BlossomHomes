@@ -225,8 +225,16 @@ public class BlossomHomes implements ModInitializer {
 
     private int removeHome(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
-        LOGGER.debug("del {}", player);
-        // todo
+        Home home = homeController.findHome(player, name);
+        LOGGER.debug("removing home {} from {}", home, player);
+
+        boolean result = homeController.removeHome(player, name);
+        if (result) {
+            TextUtils.sendWarn(ctx, "blossom.homes.remove", name);
+        } else {
+            TextUtils.sendErr(ctx, "blossom.homes.remove.failed", name);
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 
