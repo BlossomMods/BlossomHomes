@@ -140,8 +140,21 @@ public class BlossomHomes implements ModInitializer {
 
     private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
-        LOGGER.debug("run {}", player);
-        // todo
+        Home home = homeController.findHome(player, homeName);
+
+        LOGGER.trace("home player {} to {}", player, home);
+
+        if (home != null) {
+            TeleportUtils.teleport(
+                    CONFIG.teleportation,
+                    CONFIG.standStill,
+                    CONFIG.cooldown,
+                    BlossomHomes.class,
+                    player,
+                    () -> home.toDestination(ctx.getSource().getServer())
+            );
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 
