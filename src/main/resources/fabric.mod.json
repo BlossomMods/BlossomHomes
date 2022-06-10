@@ -12,7 +12,7 @@
     "repo": "https://github.com/BlossomMods/BlossomHomes"
   },
   "license": "MIT",
-  "icon": "assets/blossom-warps/icon.png",
+  "icon": "assets/blossom-homes/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
