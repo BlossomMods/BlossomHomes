@@ -112,10 +112,14 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        UUID player = context.getSource().getPlayer().getUuid();
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+        UUID playerUuid = player.getUuid();
         String start = builder.getRemaining().toLowerCase();
         data.stream()
-                .filter(v -> v.uuid.equals(player))
+                .filter(v -> v.uuid.equals(playerUuid))
                 .flatMap(v -> v.homes.stream().map(home -> home.name))
                 .sorted(String::compareToIgnoreCase)
                 .filter(pair -> pair.toLowerCase().startsWith(start))

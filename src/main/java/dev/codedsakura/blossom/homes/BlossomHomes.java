@@ -15,7 +15,6 @@ import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
@@ -115,6 +114,10 @@ public class BlossomHomes implements ModInitializer {
 
     private int listHomes(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+
         LOGGER.trace("home list {}", player);
 
         List<Home> homes = homeController.findPlayerHomes(player);
@@ -135,7 +138,7 @@ public class BlossomHomes implements ModInitializer {
                                         .setHoverShowRun()
                                         .setDescription(TextUtils.translation("blossom.homes.list.item.description", home.toArgs()))))
                         .append(TextUtils.translation("blossom.homes.list.item.after")))
-                .collect(JoiningCollector.collector(MutableText::append, new LiteralText("\n")));
+                .collect(JoiningCollector.collector(MutableText::append, Text.literal("\n")));
 
         ctx.getSource().sendFeedback(
                 TextUtils.translation("blossom.homes.list.header", homes.size(), homeController.getMaxHomes(player))
@@ -148,6 +151,10 @@ public class BlossomHomes implements ModInitializer {
 
     private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+
         Home home = homeController.findHome(player, homeName);
 
         LOGGER.trace("home player {} to {}", player, home);
@@ -178,6 +185,10 @@ public class BlossomHomes implements ModInitializer {
 
     private int addHome(CommandContext<ServerCommandSource> ctx, Home home) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+
         LOGGER.info("adding home {} to {}", home, player);
 
         boolean invalidDimension = CONFIG.dimensionBlacklist.contains(home.world);
@@ -218,9 +229,14 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int addHomeNamed(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+
         return addHome(ctx, new Home(
                 name,
-                new TeleportUtils.TeleportDestination(ctx.getSource().getPlayer())
+                new TeleportUtils.TeleportDestination(player)
         ));
     }
 
@@ -245,6 +261,10 @@ public class BlossomHomes implements ModInitializer {
 
     private int removeHome(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayer();
+        if (player == null) {
+            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
+        }
+
         Home home = homeController.findHome(player, name);
         LOGGER.debug("removing home {} from {}", home, player);
 
@@ -282,7 +302,7 @@ public class BlossomHomes implements ModInitializer {
                         .stream()
                         .map(ServerPlayerEntity::getPlayerListName)
                         .filter(Objects::nonNull)
-                        .map(Text::shallowCopy)
+                        .map(Text::copy)
                         .collect(JoiningCollector.<MutableText>collector(
                                 MutableText::append,
                                 () -> TextUtils.translation("blossom.homes.setMax.delimiter")
