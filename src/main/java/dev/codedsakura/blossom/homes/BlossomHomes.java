@@ -263,7 +263,7 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int removeHomeNamed(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        String homeName = StringArgumentType.getString(ctx, "home");
+        String homeName = StringArgumentType.getString(ctx, "name");
         return removeHome(ctx, homeName);
     }
 
