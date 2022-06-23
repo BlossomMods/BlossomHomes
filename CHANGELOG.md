@@ -1,6 +1,7 @@
 # 1.1.1
 
 * Fix `/delhome <name>` not working
+* Fix `/homes list` not working
 
 # 1.1.0
 
