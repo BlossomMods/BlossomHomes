@@ -128,7 +128,7 @@ public class BlossomHomes implements ModInitializer {
         }
 
         MutableText result = homes
-                .parallelStream()
+                .stream()
                 .map(home -> TextUtils.translation("blossom.homes.list.item.before")
                         .append(TextUtils.translation(
                                 "blossom.homes.list.item",
