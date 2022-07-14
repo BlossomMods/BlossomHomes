@@ -1,3 +1,7 @@
+# 2.0.0
+
+* Update to BlossomLib 2
+
 # 1.1.1
 
 * Fix `/delhome <name>` not working

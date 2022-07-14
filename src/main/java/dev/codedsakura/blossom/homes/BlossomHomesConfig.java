@@ -1,6 +1,7 @@
 package dev.codedsakura.blossom.homes;
 
-import dev.codedsakura.blossom.lib.TeleportConfig;
+
+import dev.codedsakura.blossom.lib.teleport.TeleportConfig;
 
 import java.util.List;
 
