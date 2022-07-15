@@ -22,6 +22,7 @@ import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
@@ -145,7 +146,7 @@ public class BlossomHomes implements ModInitializer {
                                         .setHoverShowRun()
                                         .setDescription(TextUtils.translation("blossom.homes.list.item.description", home.toArgs()))))
                         .append(TextUtils.translation("blossom.homes.list.item.after")))
-                .collect(JoiningCollector.collector(MutableText::append, Text.literal("\n")));
+                .collect(JoiningCollector.collector(MutableText::append, new LiteralText("\n")));
 
         ctx.getSource().sendFeedback(
                 TextUtils.translation("blossom.homes.list.header", homes.size(), homeController.getMaxHomes(player))
