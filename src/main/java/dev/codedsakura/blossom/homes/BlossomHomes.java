@@ -22,6 +22,7 @@ import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
@@ -120,7 +121,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int listHomes(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         LOGGER.trace("home list {}", player);
 
@@ -142,7 +143,7 @@ public class BlossomHomes implements ModInitializer {
                                         .setHoverShowRun()
                                         .setDescription(TextUtils.translation("blossom.homes.list.item.description", home.toArgs()))))
                         .append(TextUtils.translation("blossom.homes.list.item.after")))
-                .collect(JoiningCollector.collector(MutableText::append, Text.literal("\n")));
+                .collect(JoiningCollector.collector(MutableText::append, new LiteralText("\n")));
 
         ctx.getSource().sendFeedback(
                 TextUtils.translation("blossom.homes.list.header", homes.size(), homeController.getMaxHomes(player))
@@ -154,7 +155,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         Home home = homeController.findHome(player, homeName);
 
@@ -185,7 +186,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int addHome(CommandContext<ServerCommandSource> ctx, Home home) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         LOGGER.info("adding home {} to {}", home, player);
 
@@ -227,7 +228,7 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int addHomeNamed(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         return addHome(ctx, new Home(
                 name,
@@ -255,7 +256,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int removeHome(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+        ServerPlayerEntity player = ctx.getSource().getPlayer();
 
         Home home = homeController.findHome(player, name);
         LOGGER.debug("removing home {} from {}", home, player);
