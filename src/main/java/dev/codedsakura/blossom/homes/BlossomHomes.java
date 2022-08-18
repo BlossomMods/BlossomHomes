@@ -120,10 +120,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int listHomes(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayer();
-        if (player == null) {
-            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
-        }
+        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         LOGGER.trace("home list {}", player);
 
@@ -157,10 +154,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int runHome(CommandContext<ServerCommandSource> ctx, String homeName) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayer();
-        if (player == null) {
-            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
-        }
+        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         Home home = homeController.findHome(player, homeName);
 
@@ -191,10 +185,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int addHome(CommandContext<ServerCommandSource> ctx, Home home) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayer();
-        if (player == null) {
-            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
-        }
+        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         LOGGER.info("adding home {} to {}", home, player);
 
@@ -236,10 +227,7 @@ public class BlossomHomes implements ModInitializer {
     }
 
     private int addHomeNamed(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayer();
-        if (player == null) {
-            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
-        }
+        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         return addHome(ctx, new Home(
                 name,
@@ -267,10 +255,7 @@ public class BlossomHomes implements ModInitializer {
 
 
     private int removeHome(CommandContext<ServerCommandSource> ctx, String name) throws CommandSyntaxException {
-        ServerPlayerEntity player = ctx.getSource().getPlayer();
-        if (player == null) {
-            throw ServerCommandSource.REQUIRES_PLAYER_EXCEPTION.create();
-        }
+        ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         Home home = homeController.findHome(player, name);
         LOGGER.debug("removing home {} from {}", home, player);
