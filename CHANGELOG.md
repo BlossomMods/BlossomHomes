@@ -1,3 +1,7 @@
+# 2.0.4
+
+* Fix #1 (homes set-max command error)
+
 # 2.0.3
 
 * Add Chinese translations (Simplified & Traditional), courtesy of @BackWheel
