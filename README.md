@@ -84,3 +84,5 @@ only keys with available arguments are shown, for full list, please see
 - `blossom.homes.remove`: 1 argument - home name
 - `blossom.homes.remove.failed`: 1 argument - home name
 - `blossom.homes.setMax`: 2 argument - new max, players
+
+`zh_cn` (Chinese, Simplified), `zh_tw` (Chinese, Traditional) - added by @BackWheel
