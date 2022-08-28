@@ -293,12 +293,16 @@ public class BlossomHomes implements ModInitializer {
                 newMax,
                 players
                         .stream()
-                        .map(ServerPlayerEntity::getPlayerListName)
+                        .map(player -> {
+                            if (player.getPlayerListName() != null)
+                                return player.getPlayerListName();
+                            return player.getDisplayName();
+                        })
                         .filter(Objects::nonNull)
                         .map(Text::copy)
                         .collect(JoiningCollector.<MutableText>collector(
                                 MutableText::append,
-                                () -> TextUtils.translation("blossom.homes.setMax.delimiter")
+                                TextUtils.translation("blossom.homes.setMax.delimiter")
                         ))
         );
 
