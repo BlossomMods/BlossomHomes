@@ -160,7 +160,9 @@ public class BlossomHomes implements ModInitializer {
 
         LOGGER.trace("home player {} to {}", player, home);
 
-        if (home != null) {
+        if (home == null) {
+            TextUtils.sendErr(ctx, "blossom.homes.not-found", homeName);
+        } else {
             TeleportUtils.teleport(
                     CONFIG.teleportation,
                     CONFIG.standStill,

@@ -5,6 +5,7 @@
   "blossom.homes.list.item.description": "x: %3$s; y: %4$s; z: %5$s\nyaw: %6$s; pitch: %7$s",
   "blossom.homes.list.item.before": "- ",
   "blossom.homes.list.item.after": "",
+  "blossom.homes.not-found": "Home \"%s\" does not exist!",
   "blossom.homes.add": "Home %s has been successfully added!",
   "blossom.homes.add.failed.dimension": "You cannot add a home in %s!",
   "blossom.homes.add.failed.max": "You cannot have more than %s homes!",

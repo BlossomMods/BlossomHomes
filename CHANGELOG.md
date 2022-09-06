@@ -1,3 +1,7 @@
+# 2.0.5
+
+* Add message for nonexistent homes (BlossomWarps#4)
+
 # 2.0.4
 
 * Fix #1 (homes set-max command error)
