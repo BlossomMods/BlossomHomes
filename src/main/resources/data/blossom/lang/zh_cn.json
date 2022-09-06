@@ -1,16 +1,17 @@
 {
-    "blossom.homes.list.empty": "你当前拥有 0/%s 个家.",
-    "blossom.homes.list.header": "你当前拥有 %s/%s 个家:\n",
-    "blossom.homes.list.item": "%s",
-    "blossom.homes.list.item.description": "x: %3$s; y: %4$s; z: %5$s\n头部水平偏航: %6$s; 头部垂直俯仰: %7$s",
-    "blossom.homes.list.item.before": "- ",
-    "blossom.homes.list.item.after": "",
-    "blossom.homes.add": "家 %s 已成功设置!",
-    "blossom.homes.add.failed.dimension": "你无法在 %s 设置家!",
-    "blossom.homes.add.failed.max": "你不能够拥有 %s 个以上的家!",
-    "blossom.homes.add.failed.name": "你已经有一个名为 %s 的家了!",
-    "blossom.homes.remove": "家 %s 已成功移除!",
-    "blossom.homes.remove.failed": "家 %s 移除失败!",
-    "blossom.homes.setMax": "已修改设置家的数目上限为 %s 予玩家 %s",
-    "blossom.homes.setMax.delimiter": ","
-  }
+  "blossom.homes.list.empty": "你当前拥有 0/%s 个家.",
+  "blossom.homes.list.header": "你当前拥有 %s/%s 个家:\n",
+  "blossom.homes.list.item": "%s",
+  "blossom.homes.list.item.description": "x: %3$s; y: %4$s; z: %5$s\n头部水平偏航: %6$s; 头部垂直俯仰: %7$s",
+  "blossom.homes.list.item.before": "- ",
+  "blossom.homes.list.item.after": "",
+  "blossom.homes.not-found": "家 \"%s\" 并不存在!",
+  "blossom.homes.add": "家 %s 已成功设置!",
+  "blossom.homes.add.failed.dimension": "你无法在 %s 设置家!",
+  "blossom.homes.add.failed.max": "你不能够拥有 %s 个以上的家!",
+  "blossom.homes.add.failed.name": "你已经有一个名为 %s 的家了!",
+  "blossom.homes.remove": "家 %s 已成功移除!",
+  "blossom.homes.remove.failed": "家 %s 移除失败!",
+  "blossom.homes.setMax": "已修改设置家的数目上限为 %s 予玩家 %s",
+  "blossom.homes.setMax.delimiter": ","
+}
