@@ -7,12 +7,12 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.codedsakura.blossom.lib.data.ListDataController;
 import dev.codedsakura.blossom.lib.teleport.TeleportUtils;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ class Home {
 
     TeleportUtils.TeleportDestination toDestination(MinecraftServer server) {
         return new TeleportUtils.TeleportDestination(
-                server.getWorld(RegistryKey.of(Registry.WORLD_KEY, new Identifier(this.world))),
+                server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(this.world))),
                 x, y, z, yaw, pitch
         );
     }
