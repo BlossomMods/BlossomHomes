@@ -1,3 +1,8 @@
+# 2.0.6
+
+* Fix not saving homes file on home add ([#7](https://github.com/BlossomMods/BlossomHomes/issues/7))
+* Update build setups
+
 # 2.0.5
 
 * Add message for nonexistent homes (BlossomWarps#4)

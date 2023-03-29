@@ -197,6 +197,7 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         for (PlayerWithHomes playerWithHomes : data) {
             if (playerWithHomes.uuid.equals(uuid)) {
                 playerWithHomes.homes.add(home);
+                write();
                 return AddHomeResult.SUCCESS;
             }
         }
