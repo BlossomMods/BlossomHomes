@@ -13,5 +13,8 @@
   "blossom.homes.remove": "Home %s has been successfully removed!",
   "blossom.homes.remove.failed": "Failed to remove %s!",
   "blossom.homes.setMax": "Set max homes to %s for %s",
-  "blossom.homes.setMax.delimiter": ","
+  "blossom.homes.setMax.delimiter": ",",
+  "blossom.homes.load-legacy.info": "Loading legacy homes from FabricHomes...",
+  "blossom.homes.load-legacy.overwrite": "Overwriting existing homes",
+  "blossom.homes.load-legacy.done": "Done! Loaded %s homes from %s players."
 }

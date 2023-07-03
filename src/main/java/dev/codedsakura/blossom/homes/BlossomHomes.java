@@ -1,6 +1,7 @@
 package dev.codedsakura.blossom.homes;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -19,18 +20,27 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.core.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -115,7 +125,13 @@ public class BlossomHomes implements ModInitializer {
                         .requires(Permissions.require("blossom.homes.set-max", 2))
                         .then(argument("new-max", IntegerArgumentType.integer(0))
                                 .then(argument("players", EntityArgumentType.players())
-                                        .executes(this::setMax)))));
+                                        .executes(this::setMax))))
+
+                .then(literal("load-legacy")
+                        .requires(Permissions.require("blossom.homes.load-legacy", 4))
+                        .executes(this::loadLegacyDefault)
+                        .then(argument("overwrite", BoolArgumentType.bool())
+                                .executes(this::loadLegacyArgument))));
     }
 
 
@@ -308,5 +324,73 @@ public class BlossomHomes implements ModInitializer {
         );
 
         return Command.SINGLE_SUCCESS;
+    }
+
+
+    private int loadLegacy(CommandContext<ServerCommandSource> ctx, boolean overwrite) {
+        TextUtils.sendOps(ctx, "blossom.homes.load-legacy.info");
+
+        if (overwrite) {
+            TextUtils.sendOps(ctx, "blossom.homes.load-legacy.overwrite");
+        }
+
+        MinecraftServer server = ctx.getSource().getServer();
+
+        File[] playerDataFiles = server.getSavePath(WorldSavePath.PLAYERDATA).toFile().listFiles();
+
+        int totalHomes = 0, totalPlayers = 0;
+
+        try {
+            assert playerDataFiles != null;
+            for (File playerDataFile : playerDataFiles) {
+                NbtCompound data = NbtIo.readCompressed(playerDataFile);
+
+                if (!data.contains("cardinal_components")) {
+                    continue;
+                }
+                data = data.getCompound("cardinal_components");
+
+                if (!data.contains("fabrichomes:homes")) {
+                    continue;
+                }
+                var homes = data.getCompound("fabrichomes:homes")
+                        .getList("homes", NbtElement.COMPOUND_TYPE)
+                        .stream()
+                        .map(home -> {
+                            String name = ((NbtCompound) home).getString("name");
+                            String world = ((NbtCompound) home).getString("dim");
+                            double x = ((NbtCompound) home).getFloat("x");
+                            double y = ((NbtCompound) home).getFloat("y");
+                            double z = ((NbtCompound) home).getFloat("z");
+                            float yaw = ((NbtCompound) home).getFloat("yaw");
+                            float pitch = ((NbtCompound) home).getFloat("pitch");
+                            return new Home(name, world, x, y, z, yaw, pitch);
+                        })
+                        .toList();
+
+                UUID uuid = UUID.fromString(FilenameUtils.removeExtension(playerDataFile.getName()));
+
+                totalPlayers++;
+                totalHomes += homes.size();
+
+                homeController.appendHomes(uuid, homes, overwrite);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        TextUtils.sendOps(ctx, "blossom.homes.load-legacy.done", totalHomes, totalPlayers);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int loadLegacyArgument(CommandContext<ServerCommandSource> ctx) {
+        boolean overwrite = BoolArgumentType.getBool(ctx, "overwrite");
+
+        return loadLegacy(ctx, overwrite);
+    }
+
+    private int loadLegacyDefault(CommandContext<ServerCommandSource> ctx) {
+        return loadLegacy(ctx, false);
     }
 }

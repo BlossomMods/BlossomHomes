@@ -1,3 +1,7 @@
+# 2.1.0
+
+* Add migration command from FabricHomes
+
 # 2.0.6
 
 * Fix not saving homes file on home add ([#7](https://github.com/BlossomMods/BlossomHomes/issues/7))

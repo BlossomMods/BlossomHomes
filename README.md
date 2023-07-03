@@ -64,6 +64,10 @@ to allow the server owners to hide some commands in case of command clutter.
     Permission: `blossom.homes.remove` (default: false)
   - `set-max <new-max> <players>` - set all `<players>`'s max homes to `<new-max>`   
     Permission: `blossom.homes.set-max` (default: OP level 2)
+  - `load-legacy [<overwrite>]` - load legacy FabricHomes player homes, appending them to existing player homes, unless
+    `<overwrite>` is set to `true`, then replace all (found) player homes. Players don't have to be online for their
+    homes to be updated  
+    Permission: `blossom.homes.load-legacy` (default: OP level 4)
 
 Permission: `blossom.homes.set.in-blacklist` (default: OP level 2) - allow setting homes in blacklisted dimensions.
 To set other players' homes, `/execute as <player> run sethome <name>` can be used.
@@ -83,6 +87,7 @@ only keys with available arguments are shown, for full list, please see
 - `blossom.homes.add.failed.name`: 1 argument - home name
 - `blossom.homes.remove`: 1 argument - home name
 - `blossom.homes.remove.failed`: 1 argument - home name
-- `blossom.homes.setMax`: 2 argument - new max, players
+- `blossom.homes.setMax`: 2 arguments - new max, players
+- `blossom.homes.load-legacy.done`: 2 arguments - home count, player count
 
 `zh_cn` (Chinese, Simplified), `zh_tw` (Chinese, Traditional) - added by @BackWheel

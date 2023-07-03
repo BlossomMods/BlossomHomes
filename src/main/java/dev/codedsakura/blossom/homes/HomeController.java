@@ -208,11 +208,37 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
 
     boolean removeHome(ServerPlayerEntity player, String name) {
         UUID uuid = player.getUuid();
-        return data
+        boolean result = data
                 .stream()
                 .filter(v -> v.uuid.equals(uuid))
                 .findAny()
                 .map(v -> v.homes.removeIf(home -> home.name.equals(name)))
                 .orElse(false);
+
+        if (result) {
+            write();
+        }
+
+        return result;
+    }
+
+
+    void appendHomes(UUID player, List<Home> homes, boolean overwrite) {
+        for (PlayerWithHomes playerWithHomes : data) {
+            if (playerWithHomes.uuid.equals(player)) {
+                if (overwrite) {
+                    playerWithHomes.homes.clear();
+                }
+
+                playerWithHomes.homes.addAll(homes);
+                write();
+                return;
+            }
+        }
+
+        PlayerWithHomes playerWithHomes = new PlayerWithHomes(player);
+        playerWithHomes.homes.addAll(homes);
+        data.add(playerWithHomes);
+        write();
     }
 }
