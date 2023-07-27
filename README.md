@@ -26,7 +26,7 @@ teleportation settings
 `cooldown`: int - (seconds), how long the player has to wait after teleporting using this command, before
 being able to teleport again  
 `defaultHome`: String - name of the default home  
-`startHomes`: int - default max homes  
+`startHomes`: int - default max homes (**NOTE:** does not update exising player homes!)  
 `dimensionBlacklist`: String[] - a list of dimension ids (like `minecraft:the_end`) in which a player can't set a home
 `useBlacklistAsWhitelist`: boolean - invert blacklist to function as a whitelist  
 `fallbackToPlayerSpawnPoint`: boolean - use player spawn point if no default home set

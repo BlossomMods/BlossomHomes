@@ -163,7 +163,7 @@ public class BlossomHomes implements ModInitializer {
                         .append(TextUtils.translation("blossom.homes.list.item.after")))
                 .collect(JoiningCollector.collector(MutableText::append, Text.literal("\n")));
 
-        ctx.getSource().sendFeedback(() ->
+        ctx.getSource().sendFeedback(
                 TextUtils.translation("blossom.homes.list.header", homes.size(), homeController.getMaxHomes(player))
                         .append(result),
                 false
