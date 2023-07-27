@@ -20,14 +20,13 @@ BlossomHomes is a Minecraft Fabric mod in the Blossom-series mods that provides 
 This mod's config file can be found at `config/BlossomMods/BlossomHomes.json`, after running the server with
 the mod at least once.
 
-`teleportation`: [TeleportationConfig](https://github.com/BlossomMods/BlossomLib/blob/main/README.md#teleportationconfig)
--
+`teleportation`: [TeleportationConfig](https://github.com/BlossomMods/BlossomLib/blob/main/README.md#teleportationconfig) -
 teleportation settings  
 `standStill`: int - (seconds), how long the player has to stand still before being teleported  
 `cooldown`: int - (seconds), how long the player has to wait after teleporting using this command, before
 being able to teleport again  
 `defaultHome`: String - name of the default home  
-`startHomes`: int - default max homes  
+`startHomes`: int - default max homes (**NOTE:** does not update exising player homes!)  
 `dimensionBlacklist`: String[] - a list of dimension ids (like `minecraft:the_end`) in which a player can't set a home
 `useBlacklistAsWhitelist`: boolean - invert blacklist to function as a whitelist
 
