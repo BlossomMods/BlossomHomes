@@ -1,3 +1,8 @@
+# 2.2.0
+
+* Add fallback to spawn option
+* Update Chinese translations, courtesy of @Pau1am
+
 # 2.1.0
 
 * Add migration command from FabricHomes

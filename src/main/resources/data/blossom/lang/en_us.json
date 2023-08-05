@@ -16,5 +16,7 @@
   "blossom.homes.setMax.delimiter": ",",
   "blossom.homes.load-legacy.info": "Loading legacy homes from FabricHomes...",
   "blossom.homes.load-legacy.overwrite": "Overwriting existing homes",
-  "blossom.homes.load-legacy.done": "Done! Loaded %s homes from %s players."
+  "blossom.homes.load-legacy.done": "Done! Loaded %s homes from %s players.",
+  "blossom.homes.spawn.not-found": "Did not find a valid spawn point as fallback!",
+  "blossom.homes.spawn": "Teleporting to spawn point!"
 }

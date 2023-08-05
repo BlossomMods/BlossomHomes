@@ -16,4 +16,6 @@ public class BlossomHomesConfig {
 
     List<String> dimensionBlacklist = List.of();
     boolean useBlacklistAsWhitelist = false;
+
+    boolean fallbackToPlayerSpawnPoint = true;
 }
