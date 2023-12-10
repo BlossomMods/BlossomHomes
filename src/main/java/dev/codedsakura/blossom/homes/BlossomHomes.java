@@ -26,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtTagSizeTracker;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -42,7 +43,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.core.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static net.minecraft.server.command.CommandManager.argument;
@@ -383,7 +386,8 @@ public class BlossomHomes implements ModInitializer {
         try {
             assert playerDataFiles != null;
             for (File playerDataFile : playerDataFiles) {
-                NbtCompound data = NbtIo.readCompressed(playerDataFile);
+                InputStream pdfIs = new FileInputStream(playerDataFile);
+                NbtCompound data = NbtIo.readCompressed(pdfIs, NbtTagSizeTracker.ofUnlimitedBytes());
 
                 if (!data.contains("cardinal_components")) {
                     continue;
