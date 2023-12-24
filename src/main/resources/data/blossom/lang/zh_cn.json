@@ -13,7 +13,7 @@
   "blossom.homes.remove": "家 %s 已成功移除!",
   "blossom.homes.remove.failed": "家 %s 移除失败!",
   "blossom.homes.setMax": "已修改设置家的数目上限为 %s 予玩家 %s",
-  "blossom.homes.setMax.delimiter": "",
+  "blossom.homes.setMax.delimiter": "，",
   "blossom.homes.load-legacy.info": "正在加载FabricHomes的旧家文件...",
   "blossom.homes.load-legacy.overwrite": "覆盖已有的家",
   "blossom.homes.load-legacy.done": "加载完成! 已加载 %s 个家 (来自 %s 名玩家)."
