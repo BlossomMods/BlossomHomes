@@ -12,7 +12,7 @@
   "blossom.homes.add.failed.name": "你已經有一個名為「%s」的家了！",
   "blossom.homes.remove": "家「%s」已成功移除！",
   "blossom.homes.remove.failed": "家「%s」移除失敗！",
-  "blossom.homes.setMax": "已將玩家 %1$s 家的設置數量上限修改為 %2$s",
+  "blossom.homes.setMax": "已將玩家 %2$s 家的設置數量上限修改為 %1$s",
   "blossom.homes.setMax.delimiter": "，",
   "blossom.homes.load-legacy.info": "正在載入 FabricHomes 的舊家檔案……",
   "blossom.homes.load-legacy.overwrite": "正在覆寫已有的家",
