@@ -1,0 +1,22 @@
+{
+  "blossom.homes.list.empty": "0/%s 개의 설정된 집 포인트가 있습니다.",
+  "blossom.homes.list.header": "%s/%s 개의 설정된 집 포인트가 있습니다:\n",
+  "blossom.homes.list.item": "%s",
+  "blossom.homes.list.item.description": "x: %3$s; y: %4$s; z: %5$s\nyaw: %6$s; pitch: %7$s",
+  "blossom.homes.list.item.before": "- ",
+  "blossom.homes.list.item.after": "",
+  "blossom.homes.not-found": "\"%s\" 집 포인트를 찾지 못했습니다!",
+  "blossom.homes.add": "새로운 집 포인트 %s 가 성공적으로 추가되었습니다!",
+  "blossom.homes.add.failed.dimension": "%s 에서는 집 포인트를 추가 할 수 없습니다!",
+  "blossom.homes.add.failed.max": "%s 개 이상의 집 포인트를 가질 수 없습니다!",
+  "blossom.homes.add.failed.name": "이미 %s로 명명된 집 포인트가 존재합니다!",
+  "blossom.homes.remove": "집 포인트 %s 가 성공적으로 제거되었습니다!",
+  "blossom.homes.remove.failed": "집포인트 %s 를 제거하는데 실패했습니다!",
+  "blossom.homes.setMax": "최대 집포인트를 %s 개로 설정했습니다 : %s ",
+  "blossom.homes.setMax.delimiter": ",",
+  "blossom.homes.load-legacy.info": "FabricHomes 에서 기존에 저장된 집 포인트를 불러옵니다...",
+  "blossom.homes.load-legacy.overwrite": "이미 존재한 집 포인트를 덮어씌웁니다...",
+  "blossom.homes.load-legacy.done": "완료! %s 개의 집 포인트를 %s 플레이어들에게서 불러왔습니다.",
+  "blossom.homes.spawn.not-found": "텔레포트 할 지점을 찾지 못했습니다!",
+  "blossom.homes.spawn": "스폰 포인트로 이동합니다!"
+}
