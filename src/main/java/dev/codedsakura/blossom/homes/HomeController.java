@@ -58,7 +58,7 @@ class Home {
 
     TeleportUtils.TeleportDestination toDestination(MinecraftServer server) {
         return new TeleportUtils.TeleportDestination(
-                server.getWorld(RegistryKey.of(RegistryKeys.WORLD, new Identifier(this.world))),
+                server.getWorld(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(this.world))),
                 x, y, z, yaw, pitch
         );
     }

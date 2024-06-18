@@ -16,18 +16,14 @@ import dev.codedsakura.blossom.lib.text.JoiningCollector;
 import dev.codedsakura.blossom.lib.text.TextUtils;
 import dev.codedsakura.blossom.lib.utils.CustomLogger;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtSizeTracker;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -35,10 +31,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.WorldSavePath;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.TeleportTarget;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.core.Logger;
 
@@ -46,7 +41,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -188,36 +186,19 @@ public class BlossomHomes implements ModInitializer {
                 return Command.SINGLE_SUCCESS;
             }
 
-            // See PlayerManager.respawnPlayer (viewed 1.20)
-            MinecraftServer server = player.getServer();
-            assert server != null;
-            BlockPos blockPos = player.getSpawnPointPosition();
-            float spawnAngle = player.getSpawnAngle();
-            boolean spawnForced = player.isSpawnForced();
-            ServerWorld spawnWorld = server.getWorld(player.getSpawnPointDimension());
-            Optional<Vec3d> position = spawnWorld != null && blockPos != null ? PlayerEntity.findRespawnPosition(spawnWorld, blockPos, spawnAngle, spawnForced, true) : Optional.empty();
+            TeleportTarget teleportTarget = player.getRespawnTarget(true, TeleportTarget.NO_OP);
 
-            if (position.isEmpty()) {
-                TextUtils.sendErr(ctx, "blossom.homes.spawn.not-found");
-                return Command.SINGLE_SUCCESS;
-            }
-
-            BlockState blockState = spawnWorld.getBlockState(blockPos);
-            if (blockState.isIn(BlockTags.BEDS) || blockState.isOf(Blocks.RESPAWN_ANCHOR)) {
-                Vec3d vec3d2 = Vec3d.ofBottomCenter(blockPos).subtract(position.get()).normalize();
-                spawnAngle = (float) MathHelper.wrapDegrees(MathHelper.atan2(vec3d2.z, vec3d2.x) * 57.2957763671875 - 90.0);
-            }
-            LOGGER.trace("found spawn position for {} @ {}", player.getUuidAsString(), position.get());
+            LOGGER.trace("found spawn position for {} @ {}", player.getUuidAsString(), teleportTarget);
 
             TextUtils.sendWarn(ctx, "blossom.homes.spawn");
             home = new Home(
                     CONFIG.defaultHome,
-                    spawnWorld.getRegistryKey().getValue().toString(),
-                    position.get().getX(),
-                    position.get().getY(),
-                    position.get().getZ(),
-                    spawnAngle,
-                    0
+                    teleportTarget.world().getRegistryKey().getValue().toString(),
+                    teleportTarget.pos().x,
+                    teleportTarget.pos().y,
+                    teleportTarget.pos().z,
+                    teleportTarget.pitch(),
+                    teleportTarget.yaw()
             );
         }
 
