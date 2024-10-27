@@ -194,9 +194,9 @@ public class BlossomHomes implements ModInitializer {
             home = new Home(
                     CONFIG.defaultHome,
                     teleportTarget.world().getRegistryKey().getValue().toString(),
-                    teleportTarget.pos().x,
-                    teleportTarget.pos().y,
-                    teleportTarget.pos().z,
+                    teleportTarget.position().x,
+                    teleportTarget.position().y,
+                    teleportTarget.position().z,
                     teleportTarget.pitch(),
                     teleportTarget.yaw()
             );
@@ -256,8 +256,8 @@ public class BlossomHomes implements ModInitializer {
 
     private int addHomeDimension(CommandContext<ServerCommandSource> ctx, ServerWorld dimension) throws CommandSyntaxException {
         String homeName = StringArgumentType.getString(ctx, "name");
-        Vec3d position = Vec3ArgumentType.getPosArgument(ctx, "position").toAbsolutePos(ctx.getSource());
-        Vec2f rotation = RotationArgumentType.getRotation(ctx, "rotation").toAbsoluteRotation(ctx.getSource());
+        Vec3d position = Vec3ArgumentType.getPosArgument(ctx, "position").getPos(ctx.getSource());
+        Vec2f rotation = RotationArgumentType.getRotation(ctx, "rotation").getRotation(ctx.getSource());
         return addHome(ctx, new Home(
                 homeName,
                 new TeleportUtils.TeleportDestination(
