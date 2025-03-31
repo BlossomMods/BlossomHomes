@@ -21,7 +21,6 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RotationArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtSizeTracker;
 import net.minecraft.server.MinecraftServer;
@@ -373,22 +372,22 @@ public class BlossomHomes implements ModInitializer {
                 if (!data.contains("cardinal_components")) {
                     continue;
                 }
-                data = data.getCompound("cardinal_components");
+                data = data.getCompound("cardinal_components").get();
 
                 if (!data.contains("fabrichomes:homes")) {
                     continue;
                 }
-                var homes = data.getCompound("fabrichomes:homes")
-                        .getList("homes", NbtElement.COMPOUND_TYPE)
+                var homes = data.getCompound("fabrichomes:homes").get()
+                        .getList("homes").get()
                         .stream()
                         .map(home -> {
-                            String name = ((NbtCompound) home).getString("name");
-                            String world = ((NbtCompound) home).getString("dim");
-                            double x = ((NbtCompound) home).getFloat("x");
-                            double y = ((NbtCompound) home).getFloat("y");
-                            double z = ((NbtCompound) home).getFloat("z");
-                            float yaw = ((NbtCompound) home).getFloat("yaw");
-                            float pitch = ((NbtCompound) home).getFloat("pitch");
+                            String name = ((NbtCompound) home).getString("name").get();
+                            String world = ((NbtCompound) home).getString("dim").get();
+                            double x = ((NbtCompound) home).getFloat("x").get();
+                            double y = ((NbtCompound) home).getFloat("y").get();
+                            double z = ((NbtCompound) home).getFloat("z").get();
+                            float yaw = ((NbtCompound) home).getFloat("yaw").get();
+                            float pitch = ((NbtCompound) home).getFloat("pitch").get();
                             return new Home(name, world, x, y, z, yaw, pitch);
                         })
                         .toList();
