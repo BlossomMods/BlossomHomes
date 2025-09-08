@@ -25,7 +25,8 @@
     "minecraft": [
       "${supported_versions}"
     ],
-    "blossom-lib": "^${blossomlib_version}"
+    "blossom-lib": "^${blossomlib_version}",
+    "fabric-api": "*"
   },
   "suggests": {
     "fabric-permissions-api-v0": "*"
