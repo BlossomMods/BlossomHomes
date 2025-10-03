@@ -24,7 +24,8 @@ dependencies {
     // Fabric API is required for attachments and blockview APIs in MC 1.21.8
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}+${project.minecraft_version}"
 
-    modImplementation "dev.codedsakura.blossom:blossom-lib:${project.blossomlib_version}+${mc_version}"
+    // Use local JAR file instead of Maven dependency
+    modImplementation files("libs/blossom-lib-2.5.16+1.21.8.jar")
 }
 
 processResources {

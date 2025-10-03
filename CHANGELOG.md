@@ -1,3 +1,12 @@
+# 2.2.11
+
+* Update to BlossomLib 2.5.16 with local JAR dependency
+* Update to Minecraft 1.21.9
+* Update Fabric Loader to 0.17.2
+* Update Fabric API to 0.134.0
+* Simplify supported versions to 1.21.8 and 1.21.9
+* Fix build issues with Maven dependency resolution
+
 # 2.2.10
 
 * Update to support 1.21.8
