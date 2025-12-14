@@ -7,12 +7,12 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.codedsakura.blossom.lib.data.ListDataController;
 import dev.codedsakura.blossom.lib.teleport.TeleportUtils;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ class Home {
 
     Home(String name, TeleportUtils.TeleportDestination destination) {
         this(
-                name, destination.world.getRegistryKey().getValue().toString(),
+                name, destination.world.dimension().identifier().toString(),
                 destination.x, destination.y, destination.z,
                 destination.yaw, destination.pitch
         );
@@ -58,7 +58,7 @@ class Home {
 
     TeleportUtils.TeleportDestination toDestination(MinecraftServer server) {
         return new TeleportUtils.TeleportDestination(
-                server.getWorld(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(this.world))),
+                server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(this.world))),
                 x, y, z, yaw, pitch
         );
     }
@@ -94,7 +94,7 @@ class PlayerWithHomes {
     }
 }
 
-public class HomeController extends ListDataController<PlayerWithHomes> implements SuggestionProvider<ServerCommandSource> {
+public class HomeController extends ListDataController<PlayerWithHomes> implements SuggestionProvider<CommandSourceStack> {
     @Override
     public Class<PlayerWithHomes[]> getArrayClassType() {
         return PlayerWithHomes[].class;
@@ -111,9 +111,9 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
     }
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-        UUID playerUuid = player.getUuid();
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        UUID playerUuid = player.getUUID();
         String start = builder.getRemaining().toLowerCase();
         data.stream()
                 .filter(v -> v.uuid.equals(playerUuid))
@@ -124,8 +124,8 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return builder.buildFuture();
     }
 
-    List<Home> findPlayerHomes(ServerPlayerEntity player) {
-        UUID uuid = player.getUuid();
+    List<Home> findPlayerHomes(ServerPlayer player) {
+        UUID uuid = player.getUUID();
 
         for (PlayerWithHomes playerWithHomes : data) {
             if (playerWithHomes.uuid.equals(uuid)) {
@@ -136,7 +136,7 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return List.of();
     }
 
-    Home findHome(ServerPlayerEntity player, String name) {
+    Home findHome(ServerPlayer player, String name) {
         for (Home home : findPlayerHomes(player)) {
             if (home.name.equals(name)) {
                 return home;
@@ -146,8 +146,8 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return null;
     }
 
-    int getMaxHomes(ServerPlayerEntity player) {
-        UUID uuid = player.getUuid();
+    int getMaxHomes(ServerPlayer player) {
+        UUID uuid = player.getUUID();
 
         for (PlayerWithHomes playerWithHomes : data) {
             if (playerWithHomes.uuid.equals(uuid)) {
@@ -158,8 +158,8 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return BlossomHomes.CONFIG.startHomes;
     }
 
-    void setMaxHomes(ServerPlayerEntity player, int newMaxHomes) {
-        UUID uuid = player.getUuid();
+    void setMaxHomes(ServerPlayer player, int newMaxHomes) {
+        UUID uuid = player.getUUID();
 
         for (PlayerWithHomes playerWithHomes : data) {
             if (playerWithHomes.uuid.equals(uuid)) {
@@ -179,8 +179,8 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         NAME_TAKEN,
     }
 
-    AddHomeResult addHome(ServerPlayerEntity player, Home home) {
-        UUID uuid = player.getUuid();
+    AddHomeResult addHome(ServerPlayer player, Home home) {
+        UUID uuid = player.getUUID();
         List<Home> homes = findPlayerHomes(player);
 
         if (homes.size() + 1 > getMaxHomes(player)) {
@@ -206,8 +206,8 @@ public class HomeController extends ListDataController<PlayerWithHomes> implemen
         return AddHomeResult.SUCCESS;
     }
 
-    boolean removeHome(ServerPlayerEntity player, String name) {
-        UUID uuid = player.getUuid();
+    boolean removeHome(ServerPlayer player, String name) {
+        UUID uuid = player.getUUID();
         boolean result = data
                 .stream()
                 .filter(v -> v.uuid.equals(uuid))
